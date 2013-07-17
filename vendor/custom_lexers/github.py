@@ -405,10 +405,12 @@ class SlashLanguageLexer(ExtendedRegexLexer):
     def move_state(new_state):
         return ("#pop", new_state)
 
-    def right_angle_bracket(lexer, match, ctx):
+    def right_brace(lexer, match, ctx):
         if len(ctx.stack) > 1 and ctx.stack[-2] == "string":
             ctx.stack.pop()
-        yield match.start(), String.Interpol, u"}"
+            yield match.start(), String.Interpol, u"}"
+        else:
+            yield match.start(), Punctuation, u"}"
         ctx.pos = match.end()
         pass
 
@@ -501,7 +503,7 @@ class SlashLanguageLexer(ExtendedRegexLexer):
             (r'\[',                     Punctuation),
             (r'\]',                     Punctuation),
             (r'\{',                     Punctuation),
-            (r'\}',                     right_angle_bracket),
+            (r'\}',                     right_brace),
             (r';',                      Punctuation),
             (r',',                      Punctuation),
             (r'<<=',                    Operator),
